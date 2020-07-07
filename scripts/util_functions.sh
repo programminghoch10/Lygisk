@@ -290,27 +290,29 @@ mount_partitions() {
   [ "$SLOT" = "normal" ] && unset SLOT
   [ -z $SLOT ] || ui_print "- Current boot slot: $SLOT"
 
-  # Mount ro partitions
-  if is_mounted /system_root; then
-    umount /system 2>/dev/null
-    umount /system_root 2>/dev/null
-  fi
-  mount_ro_ensure "system$SLOT app$SLOT" /system
-  if [ -f /system/init -o -L /system/init ]; then
-    SYSTEM_AS_ROOT=true
-    setup_mntpoint /system_root
-    if ! mount --move /system /system_root; then
-      umount /system
-      umount -l /system 2>/dev/null
-      mount_ro_ensure "system$SLOT app$SLOT" /system_root
+  if [ -z $S ] || [ $S == "/system" ] || [ $S == "/system/system" ]; then
+    # Mount ro partitions
+    if is_mounted /system_root; then
+      umount /system 2>/dev/null
+      umount /system_root 2>/dev/null
     fi
-    mount -o bind /system_root/system /system
-  else
-    if grep ' / ' /proc/mounts | grep -qv 'rootfs' || grep -q ' /system_root ' /proc/mounts; then
+    mount_ro_ensure "system$SLOT app$SLOT" /system
+    if [ -f /system/init -o -L /system/init ]; then
       SYSTEM_AS_ROOT=true
+      setup_mntpoint /system_root
+      if ! mount --move /system /system_root; then
+        umount /system
+        umount -l /system 2>/dev/null
+        mount_ro_ensure "system$SLOT app$SLOT" /system_root
+      fi
+      mount -o bind /system_root/system /system
     else
       SYSTEM_AS_ROOT=false
+      grep ' / ' /proc/mounts | grep -qv 'rootfs' || grep -q ' /system_root ' /proc/mounts && SYSTEM_AS_ROOT=true
     fi
+  else
+    SYSTEM_AS_ROOT=true
+    mount -o bind $S /system
   fi
   $SYSTEM_AS_ROOT && ui_print "- Device is system-as-root"
 
