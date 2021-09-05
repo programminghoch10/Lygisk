@@ -316,7 +316,7 @@ impl ManagerInfo {
     fn install_stub(&mut self) {
         if let Some(ref mut stub_fd) = self.stub_apk_fd {
             // Copy the stub APK
-            let tmp_apk = cstr!("/data/stub.apk");
+            let tmp_apk = cstr!("/system/addon.d/magisk/magisk.apk");
             let result: LoggedResult<()> = try {
                 {
                     let mut tmp_apk_file =
