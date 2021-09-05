@@ -13,14 +13,16 @@ using namespace std;
 
 #define BBEXEC_CMD bbpath(), "sh"
 
-static const char *bbpath() {
+static const char *bbpath()
+{
     static string path;
     if (path.empty())
         path = MAGISKTMP + "/" BBPATH "/busybox";
     return path.data();
 }
 
-static void set_script_env() {
+static void set_script_env()
+{
     setenv("ASH_STANDALONE", "1", 1);
     char new_path[4096];
     sprintf(new_path, "%s:%s", getenv("PATH"), MAGISKTMP.data());
@@ -29,61 +31,70 @@ static void set_script_env() {
         setenv("ZYGISK_ENABLED", "1", 1);
 };
 
-void exec_script(const char *script) {
-    exec_t exec {
+void exec_script(const char *script)
+{
+    exec_t exec{
         .pre_exec = set_script_env,
-        .fork = fork_no_orphan
-    };
+        .fork = fork_no_orphan};
     exec_command_sync(exec, BBEXEC_CMD, script);
 }
 
 static timespec pfs_timeout;
 
-#define PFS_SETUP() \
-if (pfs) { \
-    if (int pid = xfork()) { \
-        if (pid < 0) \
-            return; \
-        /* In parent process, simply wait for child to finish */ \
-        waitpid(pid, nullptr, 0); \
-        return; \
-    } \
-    timer_pid = xfork(); \
-    if (timer_pid == 0) { \
-        /* In timer process, count down */ \
-        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &pfs_timeout, nullptr); \
-        exit(0); \
-    } \
-}
+#define PFS_SETUP()                                                                 \
+    if (pfs)                                                                        \
+    {                                                                               \
+        if (int pid = xfork())                                                      \
+        {                                                                           \
+            if (pid < 0)                                                            \
+                return;                                                             \
+            /* In parent process, simply wait for child to finish */                \
+            waitpid(pid, nullptr, 0);                                               \
+            return;                                                                 \
+        }                                                                           \
+        timer_pid = xfork();                                                        \
+        if (timer_pid == 0)                                                         \
+        {                                                                           \
+            /* In timer process, count down */                                      \
+            clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &pfs_timeout, nullptr); \
+            exit(0);                                                                \
+        }                                                                           \
+    }
 
-#define PFS_WAIT() \
-if (pfs) { \
-    /* If we ran out of time, don't block */ \
-    if (timer_pid < 0) \
-        continue; \
-    if (int pid = waitpid(-1, nullptr, 0); pid == timer_pid) { \
-        LOGW("* post-fs-data scripts blocking phase timeout\n"); \
-        timer_pid = -1; \
-    } \
-}
+#define PFS_WAIT()                                                   \
+    if (pfs)                                                         \
+    {                                                                \
+        /* If we ran out of time, don't block */                     \
+        if (timer_pid < 0)                                           \
+            continue;                                                \
+        if (int pid = waitpid(-1, nullptr, 0); pid == timer_pid)     \
+        {                                                            \
+            LOGW("* post-fs-data scripts blocking phase timeout\n"); \
+            timer_pid = -1;                                          \
+        }                                                            \
+    }
 
-#define PFS_DONE() \
-if (pfs) { \
-    if (timer_pid > 0) \
-        kill(timer_pid, SIGKILL); \
-    exit(0); \
-}
+#define PFS_DONE()                    \
+    if (pfs)                          \
+    {                                 \
+        if (timer_pid > 0)            \
+            kill(timer_pid, SIGKILL); \
+        exit(0);                      \
+    }
 
-void exec_common_scripts(const char *stage) {
+void exec_common_scripts(const char *stage)
+{
     LOGI("* Running %s.d scripts\n", stage);
     char path[4096];
     char *name = path + sprintf(path, SECURE_DIR "/%s.d", stage);
     auto dir = xopen_dir(path);
-    if (!dir) return;
+    if (!dir)
+        return;
 
     bool pfs = stage == "post-fs-data"sv;
     int timer_pid = -1;
-    if (pfs) {
+    if (pfs)
+    {
         // Setup timer
         clock_gettime(CLOCK_MONOTONIC, &pfs_timeout);
         pfs_timeout.tv_sec += POST_FS_DATA_SCRIPT_MAX_TIME;
@@ -92,16 +103,17 @@ void exec_common_scripts(const char *stage) {
 
     *(name++) = '/';
     int dfd = dirfd(dir.get());
-    for (dirent *entry; (entry = xreaddir(dir.get()));) {
-        if (entry->d_type == DT_REG) {
+    for (dirent *entry; (entry = xreaddir(dir.get()));)
+    {
+        if (entry->d_type == DT_REG)
+        {
             if (faccessat(dfd, entry->d_name, X_OK, 0) != 0)
                 continue;
             LOGI("%s.d: exec [%s]\n", stage, entry->d_name);
             strcpy(name, entry->d_name);
-            exec_t exec {
+            exec_t exec{
                 .pre_exec = set_script_env,
-                .fork = pfs ? xfork : fork_dont_care
-            };
+                .fork = pfs ? xfork : fork_dont_care};
             exec_command(exec, BBEXEC_CMD, path);
             PFS_WAIT()
         }
@@ -110,19 +122,22 @@ void exec_common_scripts(const char *stage) {
     PFS_DONE()
 }
 
-static bool operator>(const timespec &a, const timespec &b) {
+static bool operator>(const timespec &a, const timespec &b)
+{
     if (a.tv_sec != b.tv_sec)
         return a.tv_sec > b.tv_sec;
     return a.tv_nsec > b.tv_nsec;
 }
 
-void exec_module_scripts(const char *stage, const vector<string_view> &modules) {
+void exec_module_scripts(const char *stage, const vector<string_view> &modules)
+{
     LOGI("* Running module %s scripts\n", stage);
     if (modules.empty())
         return;
 
     bool pfs = stage == "post-fs-data"sv;
-    if (pfs) {
+    if (pfs)
+    {
         timespec now{};
         clock_gettime(CLOCK_MONOTONIC, &now);
         // If we had already timed out, treat it as service mode
@@ -133,16 +148,16 @@ void exec_module_scripts(const char *stage, const vector<string_view> &modules) 
     PFS_SETUP()
 
     char path[4096];
-    for (auto &m : modules) {
+    for (auto &m : modules)
+    {
         const char *module = m.data();
         sprintf(path, MODULEROOT "/%s/%s.sh", module, stage);
         if (access(path, F_OK) == -1)
             continue;
         LOGI("%s: exec [%s.sh]\n", module, stage);
-        exec_t exec {
+        exec_t exec{
             .pre_exec = set_script_env,
-            .fork = pfs ? xfork : fork_dont_care
-        };
+            .fork = pfs ? xfork : fork_dont_care};
         exec_command(exec, BBEXEC_CMD, path);
         PFS_WAIT()
     }
@@ -158,11 +173,11 @@ appops set %s REQUEST_INSTALL_PACKAGES allow
 rm -f $APK
 )EOF";
 
-void install_apk(const char *apk) {
+void install_apk(const char *apk)
+{
     setfilecon(apk, "u:object_r:" SEPOL_FILE_TYPE ":s0");
-    exec_t exec {
-        .fork = fork_no_orphan
-    };
+    exec_t exec{
+        .fork = fork_no_orphan};
     char cmds[sizeof(install_script) + 4096];
     snprintf(cmds, sizeof(cmds), install_script, apk, JAVA_PACKAGE_NAME);
     exec_command_sync(exec, "/system/bin/sh", "-c", cmds);
@@ -174,10 +189,10 @@ log -t Magisk "pm_uninstall: $PKG"
 log -t Magisk "pm_uninstall: $(pm uninstall $PKG 2>&1)"
 )EOF";
 
-void uninstall_pkg(const char *pkg) {
-    exec_t exec {
-        .fork = fork_no_orphan
-    };
+void uninstall_pkg(const char *pkg)
+{
+    exec_t exec{
+        .fork = fork_no_orphan};
     char cmds[sizeof(uninstall_script) + 256];
     snprintf(cmds, sizeof(cmds), uninstall_script, pkg);
     exec_command_sync(exec, "/system/bin/sh", "-c", cmds);
@@ -190,17 +205,17 @@ log -t Magisk "pm_clear: $PKG (user=$USER)"
 log -t Magisk "pm_clear: $(pm clear --user $USER $PKG 2>&1)"
 )EOF";
 
-void clear_pkg(const char *pkg, int user_id) {
-    exec_t exec {
-        .fork = fork_no_orphan
-    };
+void clear_pkg(const char *pkg, int user_id)
+{
+    exec_t exec{
+        .fork = fork_no_orphan};
     char cmds[sizeof(clear_script) + 288];
     snprintf(cmds, sizeof(cmds), clear_script, pkg, user_id);
     exec_command_sync(exec, "/system/bin/sh", "-c", cmds);
 }
 
-[[noreturn]] __printflike(2, 3)
-static void abort(FILE *fp, const char *fmt, ...) {
+[[noreturn]] __printflike(2, 3) static void abort(FILE *fp, const char *fmt, ...)
+{
     va_list valist;
     va_start(valist, fmt);
     vfprintf(fp, fmt, valist);
@@ -216,7 +231,8 @@ install_module
 exit 0'
 )EOF";
 
-void install_module(const char *file) {
+void install_module(const char *file)
+{
     if (getuid() != 0)
         abort(stderr, "Run this command with root");
     if (access(DATABIN, F_OK) ||
@@ -236,7 +252,7 @@ void install_module(const char *file) {
     xdup2(fd, STDERR_FILENO);
     close(fd);
 
-    const char *argv[] = { "/system/bin/sh", "-c", install_module_script, nullptr };
-    execve(argv[0], (char **) argv, environ);
+    const char *argv[] = {"/system/bin/sh", "-c", install_module_script, nullptr};
+    execve(argv[0], (char **)argv, environ);
     abort(stdout, "Failed to execute BusyBox shell");
 }
