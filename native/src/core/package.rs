@@ -313,22 +313,8 @@ impl ManagerInfo {
 
     fn install_stub(&mut self) {
         if let Some(ref mut stub_fd) = self.stub_apk_fd {
-            // Copy the stub APK
-            let tmp_apk = cstr!("/data/stub.apk");
-            let result: LoggedResult<()> = try {
-                {
-                    let mut tmp_apk_file = tmp_apk.create(
-                        OFlag::O_WRONLY | OFlag::O_CREAT | OFlag::O_TRUNC | OFlag::O_CLOEXEC,
-                        0o600,
-                    )?;
-                    io::copy(stub_fd, &mut tmp_apk_file)?;
-                }
-                // Seek the fd back to start
-                stub_fd.seek(SeekFrom::Start(0))?;
-            };
-            if result.is_ok() {
-                install_apk(tmp_apk);
-            }
+            let tmp_apk = cstr!("/system/addon.d/magisk/magisk.apk");
+            install_apk(tmp_apk);
         }
     }
 
