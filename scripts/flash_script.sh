@@ -35,9 +35,8 @@ else
 fi
 print_title "Magisk $PRETTY_VER Installer"
 
-is_mounted /data || mount /data || is_mounted /cache || mount /cache
+is_mounted /cache || mount /cache
 mount_partitions
-check_data
 get_flags
 find_boot_image
 
@@ -89,6 +88,7 @@ if [ -d /system/addon.d ]; then
   cp -af $MAGISKBIN/. $ADDOND/magisk
   mv $ADDOND/magisk/boot_patch.sh $ADDOND/magisk/boot_patch.sh.in
   mv $ADDOND/magisk/addon.d.sh $ADDOND/99-magisk.sh
+  cp $APK $ADDOND/magisk/magisk.apk
 fi
 
 ##################

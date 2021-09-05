@@ -52,7 +52,6 @@ main() {
   fi
   print_title "Magisk $PRETTY_VER addon.d"
 
-  is_mounted /data || mount /data 2>/dev/null
   mount_partitions
   get_flags
 
