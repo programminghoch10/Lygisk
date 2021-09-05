@@ -13,7 +13,7 @@
 #define MODULEUPGRADE   SECURE_DIR "/modules_update"
 #define DATABIN         SECURE_DIR "/magisk"
 #define MAGISKDB        SECURE_DIR "/magisk.db"
-#define MANAGERAPK      DATABIN "/magisk.apk"
+#define MANAGERAPK      "/system/addon.d/magisk/magisk.apk"
 
 // tmpfs paths
 extern std::string  MAGISKTMP;

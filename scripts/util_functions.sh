@@ -562,19 +562,7 @@ check_data() {
 }
 
 find_magisk_apk() {
-  local DBAPK
-  [ -z $APK ] && APK=/data/adb/magisk.apk
-  [ -f $APK ] || APK=/data/magisk/magisk.apk
-  [ -f $APK ] || APK=/data/app/com.topjohnwu.magisk*/*.apk
-  [ -f $APK ] || APK=/data/app/*/com.topjohnwu.magisk*/*.apk
-  if [ ! -f $APK ]; then
-    DBAPK=$(magisk --sqlite "SELECT value FROM strings WHERE key='requester'" 2>/dev/null | cut -d= -f2)
-    [ -z $DBAPK ] && DBAPK=$(strings /data/adb/magisk.db | grep -oE 'requester..*' | cut -c10-)
-    [ -z $DBAPK ] || APK=/data/user_de/*/$DBAPK/dyn/*.apk
-    [ -f $APK ] || [ -z $DBAPK ] || APK=/data/app/$DBAPK*/*.apk
-    [ -f $APK ] || [ -z $DBAPK ] || APK=/data/app/*/$DBAPK*/*.apk
-  fi
-  [ -f $APK ] || ui_print "! Unable to detect Magisk app APK for BootSigner"
+  APK="/system/addon.d/magisk/magisk.apk"
 }
 
 run_migrations() {
