@@ -153,7 +153,7 @@ void exec_module_scripts(const char *stage, const vector<string_view> &modules) 
 constexpr char install_script[] = R"EOF(
 APK=%s
 log -t Magisk "apk_install: $APK"
-log -t Magisk "apk_install: $(pm install -r $APK 2>&1)"
+log -t Magisk "apk_install: $(pm install $APK 2>&1)"
 rm -f $APK
 )EOF";
 
