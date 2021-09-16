@@ -4,6 +4,9 @@ on:
   schedule:
     - cron: '0 0 * * *'
   push:
+    branches: [ master, ci-management]
+  pull_request:
+    branches: [ master ]
   workflow_dispatch:
 
 concurrency: 
@@ -120,3 +123,58 @@ jobs:
           name: ${{ github.sha }}
           path: out
 
+  deploy:
+    runs-on: ubuntu-latest
+    needs: ci-build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: deploy
+          fetch-depth: 0
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Setup git
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Run helper script
+        run: |
+          git checkout origin/ci-management releasehelper.js
+          node releasehelper.js beta
+          mv -f beta.json docs/beta.json
+          rm releasehelper.js
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Copy artifacts
+        run: |
+          cd artifacts
+          cd $(ls)
+          cp app-release.apk ../../beta
+          cp stub-release.apk ../../beta
+          cd ../..
+          rm -r artifacts
+
+      - name: Commit update
+        run: |
+          git restore --staged .
+          git add beta/app-release.apk
+          git add beta/stub-release.apk
+          git add docs/beta.json
+          git commit -m "Update $(date -R)"
+
+      - name: Push result
+        uses: ad-m/github-push-action@master
+        with:
+          branch: deploy
+          github_token: ${{ secrets.WORKFLOW_TOKEN }}
+          repository: ${{ github.repository }}
