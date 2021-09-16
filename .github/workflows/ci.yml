@@ -31,12 +31,8 @@ jobs:
           git remote add other https://github.com/$GITHUB_REPOSITORY.git
           git fetch other
 
-      - name: Cherry pick changes
-        run: |
-          for i in $(git log origin/master..other/master --reverse --pretty=%H); do
-            echo "cherry picking $(git log -1 --oneline $i)"
-            git cherry-pick --strategy recursive -X theirs $i
-          done
+      - name: Rebase changes
+        run: git rebase -s recursive -X theirs origin/master other/master
 
       - name: Remove workflows
         run: |
