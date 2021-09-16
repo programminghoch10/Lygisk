@@ -40,9 +40,10 @@ jobs:
 
       - name: Cherry pick changes
         run: |
-          git cherry-pick --strategy recursive -X theirs 6a96a208820af3358dc0da249862446e7d07d4e2
-          git cherry-pick --strategy recursive -X theirs 4aa8423cae44f5bbe40598f5951bbead82afa0d5
-          git cherry-pick --strategy recursive -X theirs e0d32b7e24fa97524c23b00ac6440b9e09a9fcc7
+          for i in $(git log origin/master..other/master --reverse --pretty=%H); do
+            echo "cherry picking $(git log -1 --oneline $i)"
+            git cherry-pick --strategy recursive -X theirs $i
+          done
 
       - name: Set up JDK 11
         uses: actions/setup-java@v1
