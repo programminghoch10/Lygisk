@@ -747,7 +747,7 @@ install_module() {
     set_permissions
   else
     print_title "$MODNAME" "by $MODAUTH"
-    print_title "Powered by Magisk"
+    print_title "Powered by Lygisk"
 
     unzip -o "$ZIPFILE" customize.sh -d $MODPATH >&2
 
