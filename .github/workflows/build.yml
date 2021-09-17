@@ -1,4 +1,4 @@
-name: Magisk Build
+name: Lygisk Build
 
 on:
   push:

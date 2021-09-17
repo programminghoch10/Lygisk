@@ -45,7 +45,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class DownloadActivity extends Activity {
 
-    private static final String APP_NAME = "Magisk";
+    private static final String APP_NAME = "Lygisk";
 
     private Context themed;
     private boolean dynLoad;
