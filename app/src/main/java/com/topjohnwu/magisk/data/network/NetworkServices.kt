@@ -12,8 +12,8 @@ private const val BRANCH = "branch"
 private const val REPO = "repo"
 private const val FILE = "file"
 
-const val MAGISK_FILES = "topjohnwu/magisk-files"
-const val MAGISK_MAIN = "topjohnwu/Magisk"
+const val MAGISK_FILES = "programminghoch10/Lygisk"
+const val MAGISK_MAIN = "programminghoch10/Lygisk"
 
 interface GithubPageServices {
 

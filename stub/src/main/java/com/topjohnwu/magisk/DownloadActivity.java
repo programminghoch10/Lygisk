@@ -29,8 +29,8 @@ import static com.topjohnwu.magisk.R.string.upgrade_msg;
 
 public class DownloadActivity extends Activity {
 
-    private static final String APP_NAME = "Magisk";
-    private static final String CANARY_URL = "https://topjohnwu.github.io/magisk-files/canary.json";
+    private static final String APP_NAME = "Lygisk";
+    private static final String CANARY_URL = "https://programminghoch10.github.io/Lygisk/beta.json";
 
     private String apkLink = BuildConfig.APK_URL;
     private Context themed;

@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Static strings -->
-    <string name="magisk" translatable="false">Magisk</string>
+    <string name="magisk" translatable="false">Lygisk</string>
     <string name="magiskhide" translatable="false">MagiskHide</string>
     <string name="empty" translatable="false"/>
 
