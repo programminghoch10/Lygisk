@@ -1,4 +1,4 @@
-name: Magisk CI
+name: Lygisk CI
 
 on:
   schedule:
