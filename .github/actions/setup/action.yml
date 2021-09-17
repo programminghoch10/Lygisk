@@ -1,5 +1,5 @@
-name: Magisk Setup
-description: Set up the build environment for Magisk
+name: Lygisk Setup
+description: Set up the build environment for Lygisk
 inputs:
   is-asset-build:
     required: false

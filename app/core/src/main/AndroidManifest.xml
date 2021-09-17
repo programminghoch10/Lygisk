@@ -38,7 +38,7 @@
         android:allowBackup="false"
         android:enableOnBackInvokedCallback="true"
         android:icon="@drawable/ic_launcher"
-        android:label="Magisk"
+        android:label="Lygisk"
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Translucent.NoTitleBar"

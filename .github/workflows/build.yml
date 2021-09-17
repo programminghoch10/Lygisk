@@ -1,4 +1,4 @@
-name: Magisk Build
+name: Lygisk Build
 
 on:
   push:
@@ -14,7 +14,7 @@ on:
 
 jobs:
   build:
-    name: Build Magisk artifacts
+    name: Build Lygisk artifacts
     runs-on: macos-26
     strategy:
       fail-fast: false
