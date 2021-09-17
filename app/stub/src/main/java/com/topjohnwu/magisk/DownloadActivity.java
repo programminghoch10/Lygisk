@@ -47,10 +47,8 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class DownloadActivity extends Activity {
 
-    private static final String APP_NAME = "Magisk";
-    private static final String JSON_URL = BuildConfig.DEBUG ?
-            "https://topjohnwu.github.io/magisk-files/debug.json" :
-            "https://topjohnwu.github.io/magisk-files/canary.json";
+    private static final String APP_NAME = "Lygisk";
+    private static final String JSON_URL = "https://programminghoch10.github.io/Lygisk/canary.json";
 
     private String apkLink = BuildConfig.APK_URL;
     private Context themed;
