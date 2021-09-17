@@ -40,11 +40,11 @@ object Const {
 
     object Url {
         const val PATREON_URL = "https://www.patreon.com/topjohnwu"
-        const val SOURCE_CODE_URL = "https://github.com/topjohnwu/Magisk"
+        const val SOURCE_CODE_URL = "https://github.com/programminghoch10/Lygisk"
 
         const val GITHUB_API_URL = "https://api.github.com/"
-        const val GITHUB_PAGE_URL = "https://topjohnwu.github.io/magisk-files/"
-        const val INVALID_URL = "https://example.com/"
+        const val GITHUB_PAGE_URL = "https://programminghoch10.github.io/Lygisk/"
+        const val JS_DELIVR_URL = "https://cdn.jsdelivr.net/gh/"
     }
 
     object Key {
