@@ -34,7 +34,7 @@ if echo $MAGISK_VER | grep -q '\.'; then
 else
   PRETTY_VER="$MAGISK_VER($MAGISK_VER_CODE)"
 fi
-print_title "Magisk $PRETTY_VER Installer"
+print_title "Lygisk $PRETTY_VER Installer"
 
 is_mounted /cache || mount /cache
 mount_partitions
