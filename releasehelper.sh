@@ -13,7 +13,8 @@ case "$BRANCH" in
     "beta")
         ;;
     "canary")
-        BRANCH="beta"
+        ;;
+    "madness")
         ;;
     *)
         echo "Invalid Branch!"
@@ -21,15 +22,14 @@ case "$BRANCH" in
         ;;
 esac
 
-GITBRANCH="master"
-[ "$BRANCH" = "beta" ] && GITBRANCH="ci-build"
+GITBRANCH="ci-build-$BRANCH"
 
 git checkout origin/"$GITBRANCH" gradle.properties
 
 VERSION="$2"
 [ -z "$VERSION" ] && VERSION=$(git log -1 --pretty=%h origin/"$GITBRANCH")
-VERSION_CODE=$(cat gradle.properties | grep 'magisk.versionCode')
-STUB_VERSION_CODE=$(cat gradle.properties | grep 'magisk.stubVersion');
+VERSION_CODE=$(cat gradle.properties | grep 'magisk.versionCode' | cut -f2 -d '=')
+STUB_VERSION_CODE=$(cat gradle.properties | grep 'magisk.stubVersion' | cut -f2 -d '=')
 
 echo "{
   \"magisk\": {

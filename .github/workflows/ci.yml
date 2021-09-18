@@ -10,12 +10,19 @@ on:
   workflow_dispatch:
 
 concurrency: 
-  group: magisk-ci
+  group: lygisk-ci
   cancel-in-progress: false
 
 jobs:
   automerge:
+    name: Automerge ${{ matrix.branch }}
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        branch: [ stable, beta, canary, madness ]
+      fail-fast: false
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -35,28 +42,36 @@ jobs:
           git fetch other
 
       - name: Rebase changes
-        run: git rebase -s recursive -X theirs origin/master other/master
+        run: |
+          git checkout other/ci-management mergehelper.sh
+          chmod +x mergehelper.sh
+          ./mergehelper.sh ${{ matrix.branch }}
+          rm -f mergehelper.sh
 
       - name: Remove workflows
         run: |
-          rm -rf .github/workflows
-          git add .
+          git rm -rf .github/workflows
           git commit -m "remove workflows"
 
       - name: Push result
         uses: ad-m/github-push-action@master
         with:
           force: true
-          branch: ci-build
+          branch: ci-build-${{ matrix.branch }}
           github_token: ${{ secrets.WORKFLOW_TOKEN }}
           repository: ${{ github.repository }}
 
   ci-build:
-    name: Magisk CI
+    name: Lygisk Build ${{ matrix.branch }}
     runs-on: ubuntu-latest
+    if: always()
     needs: automerge
+
     strategy:
+      matrix:
+        branch: [ stable, beta, canary, madness ]
       fail-fast: false
+
     env:
       NDK_CCACHE: ${{ github.workspace }}/ccache
       CCACHE_DIR: ${{ github.workspace }}/.ccache
@@ -65,7 +80,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: ci-build
+          ref: ci-build-${{ matrix.branch }}
           submodules: 'recursive'
           fetch-depth: 0
 
@@ -80,7 +95,11 @@ jobs:
           python-version: '3.x'
 
       - name: Set up ccache
-        run: bash .github/ccache.sh
+        run: |
+          sudo apt-get install -y ccache
+          ln -s $(which ccache) ./ccache
+          mkdir ./.ccache
+          ccache -o compiler_check='%compiler% -dumpmachine; %compiler% -dumpversion'
 
       - name: Cache Gradle dependencies
         uses: actions/cache@v2
@@ -106,12 +125,12 @@ jobs:
 
       - name: Build release
         run: |
-          ./ccache -zp
+          ccache -zp
           python build.py -vr all
       - name: Build debug
         run: |
           python build.py -v all
-          ./ccache -s
+          ccache -s
       - name: Stop gradle daemon
         run: ./gradlew --stop
 
@@ -120,12 +139,20 @@ jobs:
         if: runner.os == 'Linux'
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ github.sha }}
+          name: ${{ matrix.branch }}
           path: out
 
   deploy:
     runs-on: ubuntu-latest
+    if: always()
     needs: ci-build
+
+    strategy:
+      matrix:
+        branch: [ stable, beta, canary, madness ]
+      fail-fast: false
+      max-parallel: 1
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -142,30 +169,30 @@ jobs:
         run: |
           git checkout origin/ci-management releasehelper.sh
           chmod +x releasehelper.sh
-          ./releasehelper.sh beta
-          mv -f beta.json docs/beta.json
+          ./releasehelper.sh ${{ matrix.branch }}
+          mv -f ${{ matrix.branch }}.json docs
           rm releasehelper.sh
 
       - name: Download Artifacts
         uses: actions/download-artifact@v2
         with:
           path: artifacts
+          name: ${{ matrix.branch }}
 
       - name: Copy artifacts
         run: |
           cd artifacts
-          cd $(ls)
-          cp app-release.apk ../../beta
-          cp stub-release.apk ../../beta
-          cd ../..
+          cp app-release.apk ../${{ matrix.branch }}
+          cp stub-release.apk ../${{ matrix.branch }}
+          cd ..
           rm -r artifacts
 
       - name: Commit update
         run: |
           git restore --staged .
-          git add beta/app-release.apk
-          git add beta/stub-release.apk
-          git add docs/beta.json
+          git add ${{ matrix.branch }}/app-release.apk
+          git add ${{ matrix.branch }}/stub-release.apk
+          git add docs/${{ matrix.branch }}.json
           git commit -m "Update $(date -R)"
 
       - name: Push result
