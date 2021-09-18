@@ -178,13 +178,21 @@ jobs:
         with:
           path: artifacts
           name: ${{ matrix.branch }}
+      
+      - name: Sign artifacts
+        uses: r0adkll/sign-android-release@v1
+        id: sign-artifacts
+        with:
+          releaseDirectory: artifacts
+          signingKeyBase64: ${{ secrets.KEYSTORE }}
+          keyStorePassword: ${{ secrets.KEYSTORE_KEY }}
+          alias: lygisk
+          keyPassword: ${{ secrets.KEYSTORE_KEY }}
 
       - name: Copy artifacts
         run: |
-          cd artifacts
-          cp app-release.apk ../${{ matrix.branch }}
-          cp stub-release.apk ../${{ matrix.branch }}
-          cd ..
+          mv -f artifacts/app-debug-signed.apk ${{ matrix.branch }}/app-release.apk
+          mv -f artifacts/stub-release-signed.apk ${{ matrix.branch }}/stub-release.apk
           rm -r artifacts
 
       - name: Commit update
