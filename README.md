@@ -16,7 +16,7 @@ Read more about this [here](https://github.com/topjohnwu/Magisk/pull/3037).
 
 ## Downloads
 
-Get the latest stable here: [Direct Download from GitHub](https://github.com/programminghoch10/Magisk/blob/deploy/stable/app-release.apk?raw=true)
+Get the latest stable here: [Direct Download from GitHub](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/stable/app-release.apk)
 
 
 ## Variants
@@ -36,7 +36,7 @@ If you're a real madlad you can also use `madness` but only truly insane people 
 For `canary` or `madness` you need to add a custom update URL.
 
 variant | custom update URL
-- | -
+-|-
 stable | `https://programminghoch10.github.io/Lygisk/stable.json`
 beta | `https://programminghoch10.github.io/Lygisk/beta.json`
 canary | `https://programminghoch10.github.io/Lygisk/canary.json`
