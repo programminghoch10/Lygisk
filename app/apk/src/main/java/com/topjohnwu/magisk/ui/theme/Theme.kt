@@ -48,7 +48,7 @@ enum class Theme(
     }
 
     companion object {
-        val selected get() = values().getOrNull(Config.themeOrdinal) ?: Piplup
+        val selected get() = values().getOrNull(Config.themeOrdinal) ?: Charmeleon
     }
 
 }
