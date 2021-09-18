@@ -50,6 +50,7 @@ jobs:
 
       - name: Remove workflows
         run: |
+          git restore --staged .
           git rm -rf .github/workflows
           git commit -m "remove workflows"
 
@@ -122,6 +123,12 @@ jobs:
 
       - name: Set up NDK
         run: python build.py -v ndk
+
+      - name: Set version
+        if: matrix.branch == 'stable' || matrix.branch == 'beta'
+        run: |
+          VERSION_CODE=$(cat gradle.properties | grep 'magisk.versionCode' | cut -f2 -d '=')
+          echo version=v$(echo $VERSION_CODE | cut -c1-2).$(echo $VERSION_CODE | cut -c1-2 --complement) > config.prop
 
       - name: Build release
         run: |

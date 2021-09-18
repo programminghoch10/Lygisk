@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ -z "$1" ]; then
-    echo "Usage: $0 <branch> [version]"
+    echo "Usage: $0 <branch>"
     exit 1
 fi
 
@@ -26,10 +26,17 @@ GITBRANCH="ci-build-$BRANCH"
 
 git checkout origin/"$GITBRANCH" gradle.properties
 
-VERSION="$2"
-[ -z "$VERSION" ] && VERSION=$(git log -1 --pretty=%h origin/"$GITBRANCH")
+VERSION=$(git log -1 --pretty=%h origin/"$GITBRANCH")
 VERSION_CODE=$(cat gradle.properties | grep 'magisk.versionCode' | cut -f2 -d '=')
 STUB_VERSION_CODE=$(cat gradle.properties | grep 'magisk.stubVersion' | cut -f2 -d '=')
+
+case "$BRANCH" in
+    "stable" | "beta")
+        VERSION=v$(echo $VERSION_CODE | cut -c1-2).$(echo $VERSION_CODE | cut -c1-2 --complement)
+        ;;
+    *)
+        ;;
+esac
 
 echo "{
   \"magisk\": {
