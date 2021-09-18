@@ -126,7 +126,7 @@ object Config : PreferenceModel, DBConfig {
 
     var safetyNotice by preference(Key.SAFETY, true)
     var darkTheme by preference(Key.DARK_THEME, AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-    var themeOrdinal by preference(Key.THEME_ORDINAL, Theme.Piplup.ordinal)
+    var themeOrdinal by preference(Key.THEME_ORDINAL, Theme.Charmeleon.ordinal)
     var suReAuth by preference(Key.SU_REAUTH, false)
     var suTapjack by preference(Key.SU_TAPJACK, true)
     var checkUpdate by preference(Key.CHECK_UPDATES, true)
