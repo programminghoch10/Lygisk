@@ -1,10 +1,10 @@
 ![Magisk Logo](logo.png)
 
-#### **This is not an officially supported topjohnwu project**
+#### **This is not an officially supported [topjohnwu](https://github.com/topjohnwu) project**
 
 # Lygisk
 
-This is a [Magisk](https://github.com/topjohnwu/Magisk) fork correcting one of the few mistakes legendary [@topjohnwu](github.com/topjohnwu) has made.
+This is a [Magisk](https://github.com/topjohnwu/Magisk) fork correcting one of the few mistakes legendary [@topjohnwu](https://github.com/topjohnwu) has made.
 
 This version fixes the needed `/data` access in `addon.d`,
 which fails to reinstall Magisk if the device does not support FBE decryption in recovery.
@@ -18,15 +18,16 @@ Read more about this [here](https://github.com/topjohnwu/Magisk/pull/3037).
 
 Get the latest stable here: [Direct Download from GitHub](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/stable/app-release.apk)
 
+Any other variant can be downloaded by clicking its name below.
 
 ## Variants
 
 We supply you with four variants of Lygisk:
 
-* **`Stable`**: Stable and tested versions, which have been manually ported from Magisk stable and have been tested to work
-* **`Beta`**: Automated ci-builds from the latest magisk stable
-* **`Canary`**: Automated ci-builds from the latest magisk canary
-* **`Madness`**: Automated ci-builds from the latest magisk master
+* [**`Stable`**](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/stable/app-release.apk): Stable and tested versions, which have been manually ported from Magisk stable and have been tested to work
+* [**`Beta`**](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/beta/app-release.apk): Automated ci-builds from the latest magisk stable
+* [**`Canary`**](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/canary/app-debug.apk): Automated ci-builds from the latest magisk canary
+* [**`Madness`**](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/madness/app-debug.apk): Automated ci-builds from the latest magisk master
 
 We recommend `stable` or `beta` for normal usage.
 
@@ -66,15 +67,15 @@ It's the same way for switching back to Magisk.
 Please only report bugs to us if you are sure that they appear because of our work.
 If you are unsure, just try out [Magisk](https://github.com/topjohnwu/Magisk) and if the same issue appears there, report it there.
 
-Do not report issues on the `beta` builds.
-
+Only report bugs on `stable` builds.
+If you need to report a bug, install the [`debug` variant](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/stable/app-debug.apk) first. 
+In your bug report include a `logcat`, `dmesg`, the Lygisk logs found inside the app and `/tmp/recovery.log` for addond and install issues.
 
 ## Useful Links
 
 Anything further is equal to [Magisk](https://github.com/topjohnwu/Magisk).
 
 You can go and check [their resources](https://github.com/topjohnwu/Magisk#Useful-Links).
-
 
 ## License
 

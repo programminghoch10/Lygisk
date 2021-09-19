@@ -4,9 +4,9 @@ on:
   schedule:
     - cron: '0 0 * * *'
   push:
-    branches: [ master, ci-management]
-  pull_request:
-    branches: [ master ]
+    branches: 
+      - 'ci-management'
+      - 'master'
   workflow_dispatch:
 
 concurrency: 
@@ -198,7 +198,8 @@ jobs:
 
       - name: Copy artifacts
         run: |
-          mv -f artifacts/app-debug-signed.apk ${{ matrix.branch }}/app-release.apk
+          mv -f artifacts/app-release-signed.apk ${{ matrix.branch }}/app-release.apk
+          mv -f artifacts/app-debug-signed.apk ${{ matrix.branch }}/app-debug.apk
           mv -f artifacts/stub-release-signed.apk ${{ matrix.branch }}/stub-release.apk
           rm -r artifacts
 
@@ -206,6 +207,7 @@ jobs:
         run: |
           git restore --staged .
           git add ${{ matrix.branch }}/app-release.apk
+          git add ${{ matrix.branch }}/app-debug.apk
           git add ${{ matrix.branch }}/stub-release.apk
           git add docs/${{ matrix.branch }}.json
           git commit -m "Update $(date -R)"

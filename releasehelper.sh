@@ -29,10 +29,12 @@ git checkout origin/"$GITBRANCH" gradle.properties
 VERSION=$(git log -1 --pretty=%h origin/"$GITBRANCH")
 VERSION_CODE=$(cat gradle.properties | grep 'magisk.versionCode' | cut -f2 -d '=')
 STUB_VERSION_CODE=$(cat gradle.properties | grep 'magisk.stubVersion' | cut -f2 -d '=')
+RELEASETYPE="debug"
 
 case "$BRANCH" in
     "stable" | "beta")
         VERSION=v$(echo $VERSION_CODE | cut -c1-2).$(echo $VERSION_CODE | cut -c1-2 --complement)
+        RELEASETYPE="release"
         ;;
     *)
         ;;
@@ -42,7 +44,7 @@ echo "{
   \"magisk\": {
     \"version\": \"${VERSION}\",
     \"versionCode\": \"${VERSION_CODE}\",
-    \"link\": \"https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/${BRANCH}/app-release.apk\",
+    \"link\": \"https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/${BRANCH}/app-${RELEASETYPE}.apk\",
     \"note\": \"https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/${BRANCH}/note.md\"
   },
   \"stub\": {
