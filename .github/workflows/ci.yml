@@ -55,6 +55,7 @@ jobs:
           git commit -m "remove workflows"
 
       - name: Push result
+        if: env.CHANGED == true
         uses: ad-m/github-push-action@master
         with:
           force: true
