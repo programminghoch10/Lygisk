@@ -6,7 +6,6 @@ on:
   push:
     branches: 
       - 'ci-management'
-      - 'master'
   workflow_dispatch:
 
 concurrency: 
@@ -14,208 +13,46 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  automerge:
-    name: Automerge ${{ matrix.branch }}
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        branch: [ stable, beta, canary, madness ]
-      fail-fast: false
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          repository: topjohnwu/Magisk
-          submodules: 'recursive'
-          fetch-depth: 0
-
-      - name: Setup git
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-
-      - name: Add remote
-        run: |
-          git remote add other https://github.com/$GITHUB_REPOSITORY.git
-          git fetch other
-
-      - name: Rebase changes
-        run: |
-          git checkout other/ci-management mergehelper.sh
-          chmod +x mergehelper.sh
-          ./mergehelper.sh ${{ matrix.branch }}
-          rm -f mergehelper.sh
-
-      - name: Remove workflows
-        run: |
-          git restore --staged .
-          git rm -rf .github/workflows
-          git commit -m "remove workflows"
-
-      - name: Push result
-        if: env.CHANGED == true
-        uses: ad-m/github-push-action@master
-        with:
-          force: true
-          branch: ci-build-${{ matrix.branch }}
-          github_token: ${{ secrets.WORKFLOW_TOKEN }}
-          repository: ${{ github.repository }}
-
-  ci-build:
-    name: Lygisk Build ${{ matrix.branch }}
-    runs-on: ubuntu-latest
-    if: always()
-    needs: automerge
-
-    strategy:
-      matrix:
-        branch: [ stable, beta, canary, madness ]
-      fail-fast: false
-
-    env:
-      NDK_CCACHE: ${{ github.workspace }}/ccache
-      CCACHE_DIR: ${{ github.workspace }}/.ccache
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: ci-build-${{ matrix.branch }}
-          submodules: 'recursive'
-          fetch-depth: 0
-
-      - name: Set up JDK 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: '11'
-
-      - name: Set up Python 3
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Set up ccache
-        run: |
-          sudo apt-get install -y ccache
-          ln -s $(which ccache) ./ccache
-          mkdir ./.ccache
-          ccache -o compiler_check='%compiler% -dumpmachine; %compiler% -dumpversion'
-
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-            !~/.gradle/caches/build-cache-*
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
-          restore-keys: ${{ runner.os }}-gradle-
-
-      - name: Cache build cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            ${{ github.workspace }}/.ccache
-            ~/.gradle/caches/build-cache-*
-          key: ${{ runner.os }}-build-cache-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-build-cache-
-
-      - name: Set up NDK
-        run: python build.py -v ndk
-
-      - name: Set version
-        if: matrix.branch == 'stable' || matrix.branch == 'beta'
-        run: |
-          VERSION_CODE=$(cat gradle.properties | grep 'magisk.versionCode' | cut -f2 -d '=')
-          echo version=v$(echo $VERSION_CODE | cut -c1-2).$(echo $VERSION_CODE | cut -c1-2 --complement) > config.prop
-
-      - name: Build release
-        run: |
-          ccache -zp
-          python build.py -vr all
-      - name: Build debug
-        run: |
-          python build.py -v all
-          ccache -s
-      - name: Stop gradle daemon
-        run: ./gradlew --stop
-
-      # Only upload artifacts built on Linux
-      - name: Upload build artifact
-        if: runner.os == 'Linux'
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ matrix.branch }}
-          path: out
-
+  automerge-stable:
+    uses: programminghoch10/Lygisk/.github/workflows/automerge.yml@ci-management
+    with:
+      branch: stable
+  automerge-beta:
+    uses: programminghoch10/Lygisk/.github/workflows/automerge.yml@ci-management
+    with:
+      branch: beta
+  automerge-canary:
+    uses: programminghoch10/Lygisk/.github/workflows/automerge.yml@ci-management
+    with:
+      branch: canary
+  automerge-madness:
+    uses: programminghoch10/Lygisk/.github/workflows/automerge.yml@ci-management
+    with:
+      branch: madness
+  build-stable:
+    needs: automerge-stable
+    uses: programminghoch10/Lygisk/.github/workflows/build.yml@ci-management
+    with:
+      branch: stable
+  build-beta:
+    needs: automerge-beta
+    uses: programminghoch10/Lygisk/.github/workflows/build.yml@ci-management
+    with:
+      branch: beta
+  build-canary:
+    needs: automerge-canary
+    uses: programminghoch10/Lygisk/.github/workflows/build.yml@ci-management
+    with:
+      branch: canary
+  build-madness:
+    needs: automerge-madness
+    uses: programminghoch10/Lygisk/.github/workflows/build.yml@ci-management
+    with:
+      branch: madness
   deploy:
-    runs-on: ubuntu-latest
     if: always()
-    needs: ci-build
-
-    strategy:
-      matrix:
-        branch: [ stable, beta, canary, madness ]
-      fail-fast: false
-      max-parallel: 1
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: deploy
-          fetch-depth: 0
-
-      - name: Setup git
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-
-      - name: Run helper script
-        run: |
-          git checkout origin/ci-management releasehelper.sh
-          chmod +x releasehelper.sh
-          ./releasehelper.sh ${{ matrix.branch }}
-          mv -f ${{ matrix.branch }}.json docs
-          rm releasehelper.sh
-
-      - name: Download Artifacts
-        uses: actions/download-artifact@v2
-        with:
-          path: artifacts
-          name: ${{ matrix.branch }}
-      
-      - name: Sign artifacts
-        uses: r0adkll/sign-android-release@v1
-        id: sign-artifacts
-        with:
-          releaseDirectory: artifacts
-          signingKeyBase64: ${{ secrets.KEYSTORE }}
-          keyStorePassword: ${{ secrets.KEYSTORE_KEY }}
-          alias: lygisk
-          keyPassword: ${{ secrets.KEYSTORE_KEY }}
-
-      - name: Copy artifacts
-        run: |
-          mv -f artifacts/app-release-signed.apk ${{ matrix.branch }}/app-release.apk
-          mv -f artifacts/app-debug-signed.apk ${{ matrix.branch }}/app-debug.apk
-          mv -f artifacts/stub-release-signed.apk ${{ matrix.branch }}/stub-release.apk
-          rm -r artifacts
-
-      - name: Commit update
-        run: |
-          git restore --staged .
-          git add ${{ matrix.branch }}/app-release.apk
-          git add ${{ matrix.branch }}/app-debug.apk
-          git add ${{ matrix.branch }}/stub-release.apk
-          git add docs/${{ matrix.branch }}.json
-          git commit -m "Update $(date -R)"
-
-      - name: Push result
-        uses: ad-m/github-push-action@master
-        with:
-          branch: deploy
-          github_token: ${{ secrets.WORKFLOW_TOKEN }}
-          repository: ${{ github.repository }}
+    needs: [build-stable, build-beta, build-canary, build-madness]
+    uses: programminghoch10/Lygisk/.github/workflows/deploy.yml@ci-management
+    secrets:
+      KEYSTORE: ${{ secrets.KEYSTORE }}
+      KEYSTORE_KEY: ${{ secrets.KEYSTORE_KEY }}

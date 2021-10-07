@@ -53,4 +53,11 @@ echo "{
   }
 }" > "$BRANCH".json
 
+echo "VERSION=${VERSION}" >> $GITHUB_ENV
+PREVIOUS_VERSION=$(cat docs/$BRANCH.json | grep '"version"' | cut -f2 -d ':' | cut -f2 -d '"')
+if [ $PREVIOUS_VERSION != $VERSION ] ; then
+    echo "CHANGED=true" >> $GITHUB_ENV
+    echo "Changes detected!"
+fi
+
 rm gradle.properties

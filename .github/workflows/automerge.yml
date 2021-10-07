@@ -1,0 +1,53 @@
+name: automerge
+
+on:
+  workflow_call:
+    inputs:
+      branch:
+        required: true
+        type: string
+
+jobs:
+  automerge:
+    name: Automerge ${{ inputs.branch }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          repository: topjohnwu/Magisk
+          submodules: 'recursive'
+          fetch-depth: 0
+
+      - name: Setup git
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Add remote
+        run: |
+          git remote add other https://github.com/$GITHUB_REPOSITORY.git
+          git fetch other
+
+      - name: Rebase changes
+        run: |
+          git checkout other/ci-management mergehelper.sh
+          chmod +x mergehelper.sh
+          ./mergehelper.sh ${{ inputs.branch }}
+          rm -f mergehelper.sh
+
+      - name: Remove workflows
+        run: |
+          git restore --staged .
+          git rm -rf .github/workflows
+          git commit -m "remove workflows"
+
+      - name: Push result
+        if: env.CHANGED == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          force: true
+          branch: ci-build-${{ inputs.branch }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}

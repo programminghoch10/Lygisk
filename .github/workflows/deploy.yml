@@ -1,0 +1,80 @@
+name: deploy
+
+on:
+  workflow_call:
+    secrets:
+      KEYSTORE:
+        required: true
+      KEYSTORE_KEY:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        branch: [ stable, beta, canary, madness ]
+      fail-fast: false
+      max-parallel: 1
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: deploy
+          fetch-depth: 0
+
+      - name: Setup git
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+          name: ${{ matrix.branch }}
+      
+      - name: Sign artifacts
+        uses: r0adkll/sign-android-release@v1
+        id: sign-artifacts
+        with:
+          releaseDirectory: artifacts
+          signingKeyBase64: ${{ secrets.KEYSTORE }}
+          keyStorePassword: ${{ secrets.KEYSTORE_KEY }}
+          alias: lygisk
+          keyPassword: ${{ secrets.KEYSTORE_KEY }}
+
+      - name: Copy artifacts
+        run: |
+          mv -f artifacts/app-release-signed.apk ${{ matrix.branch }}/app-release.apk
+          mv -f artifacts/app-debug-signed.apk ${{ matrix.branch }}/app-debug.apk
+          mv -f artifacts/stub-release-signed.apk ${{ matrix.branch }}/stub-release.apk
+          rm -r artifacts
+
+      - name: Run helper script
+        run: |
+          git checkout origin/ci-management releasehelper.sh
+          chmod +x releasehelper.sh
+          ./releasehelper.sh ${{ matrix.branch }}
+          mv -f ${{ matrix.branch }}.json docs
+          rm releasehelper.sh
+
+      - name: Commit update
+        if: env.CHANGED == 'true'
+        run: |
+          git restore --staged .
+          git add ${{ matrix.branch }}/app-release.apk
+          git add ${{ matrix.branch }}/app-debug.apk
+          git add ${{ matrix.branch }}/stub-release.apk
+          git add docs/${{ matrix.branch }}.json
+          git commit -m "Update ${{ matrix.branch }} ${{ env.VERSION }}"
+
+      - name: Push result
+        if: env.CHANGED == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          branch: deploy
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
