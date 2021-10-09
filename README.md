@@ -48,6 +48,7 @@ madness | `https://programminghoch10.github.io/Lygisk/madness.json`
 ## Installation
 
 We recommend installation via recovery.
+Just rename the downloaded file to `.zip` and sideload it.
 
 Installing by patching bootimages should also work, 
 but if you intend to use that way you might as well use [Magisk](https://github.com/topjohnwu/Magisk) in the first place.
@@ -72,6 +73,8 @@ If you need to report a bug, install the [`debug` variant](https://raw.githubuse
 In your bug report include a `logcat`, `dmesg`, the Lygisk logs found inside the app and `/tmp/recovery.log` for addond and install issues.
 
 ## Useful Links
+
+Join our [Telegram Group](https://t.me/Lygisk) for asking quick questions or to get the latest news directly.
 
 Anything further is equal to [Magisk](https://github.com/topjohnwu/Magisk).
 

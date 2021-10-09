@@ -59,6 +59,7 @@ jobs:
           chmod +x releasehelper.sh
           ./releasehelper.sh ${{ matrix.branch }}
           mv -f ${{ matrix.branch }}.json docs
+          mv -f note.md ${{ matrix.branch }}/note.md
           rm releasehelper.sh
 
       - name: Commit update
@@ -68,6 +69,7 @@ jobs:
           git add ${{ matrix.branch }}/app-release.apk
           git add ${{ matrix.branch }}/app-debug.apk
           git add ${{ matrix.branch }}/stub-release.apk
+          git add ${{ matrix.branch }}/note.md
           git add docs/${{ matrix.branch }}.json
           git commit -m "Update ${{ matrix.branch }} ${{ env.VERSION }}"
 

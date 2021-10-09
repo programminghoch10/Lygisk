@@ -53,6 +53,9 @@ echo "{
   }
 }" > "$BRANCH".json
 
+echo "Lygisk $BRANCH Update $VERSION ($VERSION_CODE)
+Build date: $(date -R)" > note.md
+
 echo "VERSION=${VERSION}" >> $GITHUB_ENV
 PREVIOUS_VERSION=$(cat docs/$BRANCH.json | grep '"version"' | cut -f2 -d ':' | cut -f2 -d '"')
 if [ $PREVIOUS_VERSION != $VERSION ] ; then
