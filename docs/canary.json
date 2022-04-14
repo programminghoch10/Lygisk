@@ -1,0 +1,12 @@
+{
+  "magisk": {
+    "version": "088778269",
+    "versionCode": "28101",
+    "link": "https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/canary/app-debug.apk",
+    "note": "https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/canary/note.md"
+  },
+  "stub": {
+    "versionCode": "40",
+    "link": "https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/canary/stub-release.apk"
+  }
+}
