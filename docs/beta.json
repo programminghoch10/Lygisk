@@ -1,0 +1,12 @@
+{
+  "magisk": {
+    "version": "v28.101",
+    "versionCode": "28101",
+    "link": "https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/beta/app-release.apk",
+    "note": "https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/beta/note.md"
+  },
+  "stub": {
+    "versionCode": "40",
+    "link": "https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/beta/stub-release.apk"
+  }
+}
