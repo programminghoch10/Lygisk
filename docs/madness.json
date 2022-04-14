@@ -1,0 +1,12 @@
+{
+  "magisk": {
+    "version": "c8171cc44",
+    "versionCode": "27001",
+    "link": "https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/madness/app-debug.apk",
+    "note": "https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/madness/note.md"
+  },
+  "stub": {
+    "versionCode": "39",
+    "link": "https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/madness/stub-release.apk"
+  }
+}
