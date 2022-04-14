@@ -71,12 +71,13 @@ jobs:
           git add ${{ matrix.branch }}/stub-release.apk
           git add ${{ matrix.branch }}/note.md
           git add docs/${{ matrix.branch }}.json
-          git commit -m "Update ${{ matrix.branch }} ${{ env.VERSION }}"
+          git commit --amend -m "Update ${{ matrix.branch }} ${{ env.VERSION }}"
 
       - name: Push result
         if: env.CHANGED == 'true'
         uses: ad-m/github-push-action@master
         with:
           branch: deploy
+          force: true
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}

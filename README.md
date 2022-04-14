@@ -4,12 +4,13 @@
 
 # Lygisk
 
-This is a [Magisk](https://github.com/topjohnwu/Magisk) fork correcting one of the few mistakes legendary [@topjohnwu](https://github.com/topjohnwu) has made.
+Lygisk is a [Magisk](https://github.com/topjohnwu/Magisk) fork correcting one of the few mistakes legendary [@topjohnwu](https://github.com/topjohnwu) did not fix (yet).
 
-This version fixes the needed `/data` access in `addon.d`,
-which fails to reinstall Magisk if the device does not support FBE decryption in recovery.
+Lygisk fixes the needed `/data` access in `addon.d`,
+which fails to reinstall Magisk during OTA 
+if the device does not support FBE decryption in recovery.
 
-Bought to you by [@Linux4](https://github.com/Linux4) and [@programminghoch10](https://github.com/programminghoch10).
+Brought to you by [@Linux4](https://github.com/Linux4) and [@programminghoch10](https://github.com/programminghoch10).
 
 Thanks to [@jesec](https://github.com/jesec) for the initial work.
 Read more about this [here](https://github.com/topjohnwu/Magisk/pull/3037).
@@ -82,7 +83,7 @@ You can go and check [their resources](https://github.com/topjohnwu/Magisk#Usefu
 
 ## License
 
-#### Our license obviously is the same as [Magisk's license](https://github.com/topjohnwu/Magisk#License)
+Our license obviously is the same as [Magisk's license](https://github.com/topjohnwu/Magisk#License)
 
 ```
 Magisk, including all git submodules are free software:

@@ -54,6 +54,7 @@ echo "{
 }" > "$BRANCH".json
 
 echo "Lygisk $BRANCH Update $VERSION ($VERSION_CODE)
+
 Build date: $(date -R)" > note.md
 
 echo "VERSION=${VERSION}" >> $GITHUB_ENV
