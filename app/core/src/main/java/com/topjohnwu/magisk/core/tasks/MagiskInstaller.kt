@@ -174,6 +174,26 @@ abstract class MagiskInstallImpl protected constructor(
     private suspend fun InputStream.copyAndCloseOut(out: OutputStream) =
         out.use { copyAll(it, 1024 * 1024) }
 
+    private fun addond(): Boolean {
+        console.add("- Adding addon.d survival script")
+
+        val addond = "/system/addon.d"
+
+        val systemPartition = if (Info.isSAR) "/" else "/system"
+
+        // adapted /scripts/flash_script.sh addon.d
+        return arrayOf(
+            "mount -o rw,remount $systemPartition",
+            "rm -rf $addond/99-magisk.sh 2>/dev/null",
+            "rm -rf $addond/magisk 2>/dev/null",
+            "mkdir -p $addond/magisk",
+            "cp -prLf $installDir/. $addond/magisk",
+            "mv $addond/magisk/boot_patch.sh $addond/magisk/boot_patch.sh.in",
+            "mv $addond/magisk/addon.d.sh $addond/99-magisk.sh",
+            "cp $AppApkPath $addond/magisk/magisk.apk",
+        ).asSequence().map { it.sh() }.all { it.isSuccess }
+    }
+
     private suspend fun processFile(uri: Uri, usbDeviceName: String? = null): Boolean {
         val input = try {
             if (uri.scheme.equals("https", ignoreCase = true) || uri.scheme.equals("http", ignoreCase = true)) {
@@ -488,7 +508,7 @@ abstract class MagiskInstallImpl protected constructor(
     protected suspend fun patchFile(file: Uri, usbDeviceName: String? = null) =
         extractFiles() && processFile(file, usbDeviceName)
 
-    protected suspend fun direct() = findImage() && extractFiles() && patchBoot() && flashBoot()
+    protected suspend fun direct() = findImage() && extractFiles() && addond() && patchBoot() && flashBoot()
 
     protected suspend fun secondSlot() =
         findSecondary() && extractFiles() && patchBoot() && flashBoot() && postOTA()
