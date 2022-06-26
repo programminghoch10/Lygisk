@@ -6,6 +6,11 @@ on:
       branch:
         required: true
         type: string
+    secrets:
+      KEYSTORE:
+        required: true
+      KEYSTORE_KEY:
+        required: true
 
 jobs:
   ci-build:
@@ -67,6 +72,14 @@ jobs:
         run: |
           VERSION_CODE=$(cat gradle.properties | grep 'magisk.versionCode' | cut -f2 -d '=')
           echo version=v$(echo $VERSION_CODE | cut -c1-2).$(echo $VERSION_CODE | cut -c1-2 --complement) > config.prop
+
+      - name: Import signing config
+        run: |
+          echo "${{ secrets.KEYSTORE }}" | base64 -d > keystore.jks
+          echo "keyStore=keystore.jks" >> config.prop
+          echo "keyStorePass=${{ secrets.KEYSTORE_KEY }}" >> config.prop
+          echo "keyAlias=lygisk" >> config.prop
+          echo "keyPass=${{ secrets.KEYSTORE_KEY }}" >> config.prop
 
       - name: Build release
         run: |

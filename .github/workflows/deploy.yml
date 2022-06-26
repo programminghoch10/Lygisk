@@ -2,11 +2,6 @@ name: deploy
 
 on:
   workflow_call:
-    secrets:
-      KEYSTORE:
-        required: true
-      KEYSTORE_KEY:
-        required: true
 
 jobs:
   deploy:
@@ -35,22 +30,12 @@ jobs:
         with:
           path: artifacts
           name: ${{ matrix.branch }}
-      
-      - name: Sign artifacts
-        uses: r0adkll/sign-android-release@v1
-        id: sign-artifacts
-        with:
-          releaseDirectory: artifacts
-          signingKeyBase64: ${{ secrets.KEYSTORE }}
-          keyStorePassword: ${{ secrets.KEYSTORE_KEY }}
-          alias: lygisk
-          keyPassword: ${{ secrets.KEYSTORE_KEY }}
 
       - name: Copy artifacts
         run: |
-          mv -f artifacts/app-release-signed.apk ${{ matrix.branch }}/app-release.apk
-          mv -f artifacts/app-debug-signed.apk ${{ matrix.branch }}/app-debug.apk
-          mv -f artifacts/stub-release-signed.apk ${{ matrix.branch }}/stub-release.apk
+          mv -f artifacts/app-release.apk ${{ matrix.branch }}/app-release.apk
+          mv -f artifacts/app-debug.apk ${{ matrix.branch }}/app-debug.apk
+          mv -f artifacts/stub-release.apk ${{ matrix.branch }}/stub-release.apk
           rm -r artifacts
 
       - name: Run helper script
