@@ -214,6 +214,11 @@ run_migrations() { return; }
 
 grep_prop() { return; }
 
+mkblknode(){
+    local blk_mm="$(mountpoint -d "$2" | sed "s/:/ /g")"
+    mknod "$1" -m 666 b $blk_mm
+}
+
 #############
 # Initialize
 #############
