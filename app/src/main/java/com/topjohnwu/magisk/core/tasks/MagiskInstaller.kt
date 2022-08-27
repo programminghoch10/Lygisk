@@ -173,7 +173,6 @@ abstract class MagiskInstallImpl protected constructor(
 
         // adapted /scripts/flash_script.sh addon.d
         return arrayOf(
-            "blockdev --setrw $(grep -E \"/dev/block.* $systemPartition \" /proc/mounts | cut -f 1 -d ' ' )",
             "mount -o rw,remount $systemPartition",
             "rm -rf $addond/99-magisk.sh 2>/dev/null",
             "rm -rf $addond/magisk 2>/dev/null",
