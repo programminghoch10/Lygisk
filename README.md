@@ -8,9 +8,12 @@ Lygisk is a [Magisk](https://github.com/topjohnwu/Magisk) fork correcting one of
 
 Lygisk fixes the needed `/data` access in `addon.d`,
 which fails to reinstall Magisk during OTA 
-if the device does not support FBE decryption in recovery.
+if the device does not support FBE decryption in recovery
+([more details below](#lygisk-vs-magisk)).
 
-Brought to you by [@Linux4](https://github.com/Linux4) and [@programminghoch10](https://github.com/programminghoch10).
+Brought to you by [@Linux4](https://github.com/Linux4),
+[@programminghoch10](https://github.com/programminghoch10)
+and [@binarynoise](https://github.com/binarynoise).
 
 Thanks to [@jesec](https://github.com/jesec) for the initial work.
 Read more about this [here](https://github.com/topjohnwu/Magisk/pull/3037).
