@@ -69,9 +69,12 @@ It's the same way for switching back to Magisk.
 
 ## Lygisk vs Magisk
 
-Lygisk has only an advantage that if you have an A-only device that is encrypted and the recovery cannot
-(automatically) decrypt `/data`,
-then reinstalling Lygisk during OTA is automatic.
+Lygisk has been developed for one specific case:
+* `A-only` device
+* `/data` is encrypted
+* the recovery cannot decrypt `/data`
+* the recovery is `addon.d` capable
+This is the case for every LineageOS device running the LineageOS recovery.
 
 If you patch `boot.img` or you have `/data` not encrypted, use Magisk.
 If you have an `addon.d`-compatible ROM (such as LineageOS) with encrypted `/data`, use Lygisk.
@@ -80,9 +83,6 @@ Magisk stores only parts of the install script in `addon.d`.
 All other files required for installation are placed within `/data`, 
 which (in our case) is encrypted and thus unavailable.
 Lygisk will keep all required files for reinstallation ready within `addon.d`.
-If you update Lygisk (via direct install),
-the update will both update Lygisk and the files in `addon.d` to ensure that Lygisk survives OTA.
-
 That is actually the whole reason why Lygisk exists: You don't need to re-flash Lygisk after OTA manually.
 
 If you use Lygisk when your storage is not encrypted anyway, it won't give you an advantage, but it will still work.
