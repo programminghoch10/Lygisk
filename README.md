@@ -85,8 +85,7 @@ which (in our case) is encrypted and thus unavailable.
 Lygisk will keep all required files for reinstallation ready within `addon.d`.
 That is actually the whole reason why Lygisk exists: You don't need to re-flash Lygisk after OTA manually.
 
-If you use Lygisk when your storage is not encrypted anyway, it won't give you an advantage, but it will still work.
-
+If you use Lygisk with unencrypted `/data`, it won't give you any advantage over Magisk.
 ## Bug reports
 
 Please only report bugs to us if you are sure that they appear because of our work.
