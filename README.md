@@ -83,8 +83,6 @@ Magisk stores only parts of the install script in `addon.d`.
 All other files required for installation are placed within `/data`, 
 which (in our case) is encrypted and thus unavailable.
 Lygisk will keep all required files for reinstallation ready within `addon.d`.
-That is actually the whole reason why Lygisk exists: You don't need to re-flash Lygisk after OTA manually.
-
 If you use Lygisk with unencrypted `/data`, it won't give you any advantage over Magisk.
 
 ## Bug reports
