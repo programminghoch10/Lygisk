@@ -77,7 +77,7 @@ Lygisk has been developed for one specific case:
 This is the case for every LineageOS device running the LineageOS recovery.
 
 If you patch `boot.img` or you have `/data` not encrypted, use Magisk.
-If you have an `addon.d`-compatible ROM (such as LineageOS) with encrypted `/data`, use Lygisk.
+If you have an `addon.d`-compatible recovery (such as LineageOS recovery) with encrypted `/data`, use Lygisk.
 
 Magisk stores only parts of the install script in `addon.d`.
 All other files required for installation are placed within `/data`, 
