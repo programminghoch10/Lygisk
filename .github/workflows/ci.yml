@@ -3,9 +3,6 @@ name: Lygisk CI
 on:
   schedule:
     - cron: '0 0 * * *'
-  push:
-    branches: 
-      - 'ci-management'
   workflow_dispatch:
 
 concurrency: 
