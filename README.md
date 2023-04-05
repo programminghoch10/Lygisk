@@ -67,6 +67,24 @@ Now install Lygisk.
 
 It's the same way for switching back to Magisk.
 
+## Lygisk vs Magisk
+
+Lygisk has been developed for one specific case:
+* `A-only` device
+* `/data` is encrypted
+* the recovery cannot decrypt `/data`
+* the recovery is `addon.d` capable
+This is the case for every LineageOS device running the LineageOS recovery.
+
+If you patch `boot.img` or you have `/data` not encrypted, use Magisk.
+If you have an `addon.d`-compatible recovery (such as LineageOS recovery) with encrypted `/data`, use Lygisk.
+
+Magisk stores only parts of the install script in `addon.d`.
+All other files required for installation are placed within `/data`, 
+which (in our case) is encrypted and thus unavailable.
+Lygisk will keep all required files for reinstallation ready within `addon.d`.
+If you use Lygisk with unencrypted `/data`, it won't give you any advantage over Magisk.
+
 ## Bug reports
 
 Please only report bugs to us if you are sure that they appear because of our work.
