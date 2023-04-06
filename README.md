@@ -74,6 +74,7 @@ Lygisk has been developed for one specific case:
 * `/data` is encrypted
 * the recovery cannot decrypt `/data`
 * the recovery is `addon.d` capable
+
 This is the case for every LineageOS device running the LineageOS recovery.
 
 If you patch `boot.img` or you have `/data` not encrypted, use Magisk.
