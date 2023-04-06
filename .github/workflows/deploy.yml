@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: deploy
           fetch-depth: 0
@@ -26,7 +26,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           path: artifacts
           name: ${{ matrix.branch }}
