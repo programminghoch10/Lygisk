@@ -72,6 +72,9 @@ main() {
   api_level_arch_detect
   ui_print "- Device platform: $ABI"
 
+  PREINITDEVICE=$(cat $MAGISKTMP/PREINITDEVICE)
+  [ -n "$PREINITDEVICE" ] && ui_print "- Restored pre-init storage partition device ID from addon.d: $PREINITDEVICE"
+
   remove_system_su
   find_magisk_apk
   install_magisk

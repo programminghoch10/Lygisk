@@ -181,6 +181,7 @@ abstract class MagiskInstallImpl protected constructor(
             "mv $addond/magisk/boot_patch.sh $addond/magisk/boot_patch.sh.in",
             "mv $addond/magisk/addon.d.sh $addond/99-magisk.sh",
             "cp $AppApkPath $addond/magisk/magisk.apk",
+            "magisk --preinit-device > $addond/magisk/PREINITDEVICE",
         ).asSequence().map { it.sh() }.all { it.isSuccess }
     }
 
