@@ -82,6 +82,9 @@ if [ -d /system/addon.d ]; then
   blockdev --setrw /dev/block/mapper/system$SLOT 2>/dev/null
   mount -o rw,remount /system
   ADDOND=/system/addon.d
+  PREINITDEVICE=$(cat $ADDOND/magisk/PREINITDEVICE)
+  [ -n "$PREINITDEVICE" ] && ui_print "- Restored pre-init storage partition device ID from addon.d: $PREINITDEVICE"
+  cp -af $ADDOND/magisk/PREINITDEVICE $MAGISKBIN/PREINITDEVICE
   rm -rf $ADDOND/99-magisk.sh 2>/dev/null
   rm -rf $ADDOND/magisk 2>/dev/null
   mkdir -p $ADDOND/magisk
