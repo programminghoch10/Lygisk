@@ -48,7 +48,6 @@ jobs:
           rm releasehelper.sh
 
       - name: Commit update
-        if: env.CHANGED == 'true'
         run: |
           git restore --staged .
           git add ${{ matrix.branch }}/app-release.apk
@@ -59,7 +58,6 @@ jobs:
           git commit --amend -m "Update ${{ matrix.branch }} ${{ env.VERSION }}"
 
       - name: Push result
-        if: env.CHANGED == 'true'
         uses: ad-m/github-push-action@master
         with:
           branch: deploy
