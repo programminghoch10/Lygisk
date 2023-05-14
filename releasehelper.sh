@@ -40,18 +40,20 @@ case "$BRANCH" in
         ;;
 esac
 
-echo "{
-  \"magisk\": {
-    \"version\": \"${VERSION}\",
-    \"versionCode\": \"${VERSION_CODE}\",
-    \"link\": \"https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/${BRANCH}/app-${RELEASETYPE}.apk\",
-    \"note\": \"https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/${BRANCH}/note.md\"
+echo <<EOF > "$BRANCH.json"
+{
+  "magisk": {
+    "version": "${VERSION}",
+    "versionCode": "${VERSION_CODE}",
+    "link": "https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/${BRANCH}/app-${RELEASETYPE}.apk",
+    "note": "https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/${BRANCH}/note.md"
   },
-  \"stub\": {
-    \"versionCode\": \"${STUB_VERSION_CODE}\",
-    \"link\": \"https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/${BRANCH}/stub-release.apk\"
+  "stub": {
+    "versionCode": "${STUB_VERSION_CODE}",
+    "link": "https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/${BRANCH}/stub-release.apk"
   }
-}" > "$BRANCH".json
+}
+EOF
 
 echo "Lygisk $BRANCH Update $VERSION ($VERSION_CODE)
 
