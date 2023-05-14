@@ -57,6 +57,6 @@ EOF
 
 echo "Lygisk $BRANCH Update $VERSION ($VERSION_CODE)
 
-Build date: $(date -R)" > note.md
+Build date: $(date -u -R)" > note.md
 
 rm gradle.properties
