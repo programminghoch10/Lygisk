@@ -40,7 +40,7 @@ case "$BRANCH" in
         ;;
 esac
 
-echo <<EOF > "$BRANCH.json"
+cat <<EOF > "$BRANCH.json"
 {
   "magisk": {
     "version": "${VERSION}",
