@@ -51,32 +51,33 @@ madness | `https://programminghoch10.github.io/Lygisk/madness.json`
 
 ## Installation
 
-We recommend installation via recovery.
-Just rename the downloaded file to `.zip` and sideload it.
+For installing Lygisk, just rename the downloaded file to `.zip` and sideload it.
+If the Lygisk app doesn't appear after installation, install the apk manually.
 
-Installing by patching bootimages should also work, 
-but if you intend to use that way you might as well use [Magisk](https://github.com/topjohnwu/Magisk) in the first place.
+For installing by patching bootimages,
+use [Magisk](https://github.com/topjohnwu/Magisk) instead.
 
 ### Migration
 
 Migrating from Magisk to Lygisk is easy and does not remove installed modules.
 
-In Magisk app select `Uninstall Magisk` and then `Restore bootimage`.
-Then uninstall the Magisk app.
-Now install Lygisk.
+Just uninstall the Magisk app and [install Lygisk via recovery](#installation).
 
 It's the same way for switching back to Magisk.
 
 ## Lygisk vs Magisk
 
 Lygisk has been developed for one specific case:
+
 * `A-only` device
 * `/data` is encrypted
 * the recovery cannot decrypt `/data`
 * the recovery is `addon.d` capable
-This is the case for every LineageOS device running the LineageOS recovery.
 
-If you patch `boot.img` or you have `/data` not encrypted, use Magisk.
+This is the case for every `A-only` LineageOS device running the LineageOS recovery.
+
+If you patch `boot.img`, use Magisk.  
+If you have `/data` not encrypted, use Magisk.  
 If you have an `addon.d`-compatible recovery (such as LineageOS recovery) with encrypted `/data`, use Lygisk.
 
 Magisk stores only parts of the install script in `addon.d`.
@@ -92,7 +93,7 @@ If you are unsure, just try out [Magisk](https://github.com/topjohnwu/Magisk) an
 
 Only report bugs on `stable` builds.
 If you need to report a bug, install the [`debug` variant](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/stable/app-debug.apk) first. 
-In your bug report include a `logcat`, `dmesg`, the Lygisk logs found inside the app and `/tmp/recovery.log` for addond and install issues.
+In your bug report include a `logcat`, `dmesg`, the Lygisk logs found inside the app and `/tmp/recovery.log` for `addon.d` and install issues.
 
 ## Useful Links
 
