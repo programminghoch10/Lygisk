@@ -83,15 +83,7 @@ void preserve_stub_apk() {
 }
 
 static void install_stub() {
-    if (stub_apk_fd < 0)
-        return;
-    struct stat st{};
-    fstat(stub_apk_fd, &st);
     char apk[] = "/system/addon.d/magisk/magisk.apk";
-    int dfd = xopen(apk, O_WRONLY | O_CREAT | O_TRUNC | O_CLOEXEC, 0600);
-    xsendfile(dfd, stub_apk_fd, nullptr, st.st_size);
-    lseek(stub_apk_fd, 0, SEEK_SET);
-    close(dfd);
     install_apk(apk);
 }
 
