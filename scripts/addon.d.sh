@@ -99,6 +99,9 @@ case "$1" in
     # Stub
   ;;
   pre-backup)
+    # Stub
+  ;;
+  post-backup)
     # Back up PREINITDEVICE from existing partition before OTA on A-only devices
     if ! $backuptool_ab; then
       initialize
@@ -108,9 +111,6 @@ case "$1" in
       $MAGISKBIN/magiskboot cpio ramdisk.cpio "extract .backup/.magisk config.orig"
       $MAGISKBIN/magiskboot cleanup
     fi
-  ;;
-  post-backup)
-    # Stub
   ;;
   pre-restore)
     # Stub
