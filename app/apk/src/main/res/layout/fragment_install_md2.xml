@@ -111,9 +111,10 @@
                         <CheckBox
                             style="@style/WidgetFoundation.Checkbox"
                             gone="@{Info.ramdisk}"
+                            android:enabled="false"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:checked="@={Config.recovery}"
+                            android:checked="false"
                             android:text="@string/recovery_mode"
                             app:tint="?colorPrimary" />
 
