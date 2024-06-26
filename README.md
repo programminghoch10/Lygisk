@@ -61,7 +61,7 @@ use [Magisk](https://github.com/topjohnwu/Magisk) instead.
 
 Migrating from Magisk to Lygisk is easy and does not remove installed modules.
 
-Just uninstall the Magisk app and [install Lygisk via recovery](#installation).
+Just uninstall the Magisk app and [install Lygisk via recovery](#installation). Full uninstall should not be necessary.
 
 It's the same way for switching back to Magisk.
 
