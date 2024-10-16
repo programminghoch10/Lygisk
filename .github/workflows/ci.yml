@@ -28,6 +28,7 @@ jobs:
       branch: madness
   build-stable:
     needs: automerge-stable
+    if: needs.automerge-stable.outputs.changed == 'true'
     uses: ./.github/workflows/build.yml
     with:
       branch: stable
@@ -36,6 +37,7 @@ jobs:
       KEYSTORE_KEY: ${{ secrets.KEYSTORE_KEY }}
   build-beta:
     needs: automerge-beta
+    if: needs.automerge-beta.outputs.changed == 'true'
     uses: ./.github/workflows/build.yml
     with:
       branch: beta
@@ -44,6 +46,7 @@ jobs:
       KEYSTORE_KEY: ${{ secrets.KEYSTORE_KEY }}
   build-canary:
     needs: automerge-canary
+    if: needs.automerge-canary.outputs.changed == 'true'
     uses: ./.github/workflows/build.yml
     with:
       branch: canary
@@ -52,6 +55,7 @@ jobs:
       KEYSTORE_KEY: ${{ secrets.KEYSTORE_KEY }}
   build-madness:
     needs: automerge-madness
+    if: needs.automerge-madness.outputs.changed == 'true'
     uses: ./.github/workflows/build.yml
     with:
       branch: madness
@@ -60,5 +64,19 @@ jobs:
       KEYSTORE_KEY: ${{ secrets.KEYSTORE_KEY }}
   deploy:
     if: always()
-    needs: [build-stable, build-beta, build-canary, build-madness]
-    uses: ./.github/workflows/deploy.yml
+    needs: [
+      build-stable, build-beta, build-canary, build-madness,
+      automerge-stable, automerge-beta, automerge-canary, automerge-madness
+    ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        branch: [ stable, beta, canary, madness ]
+      fail-fast: false
+      max-parallel: 1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/deploy
+        if: needs[format('automerge-{0}', matrix.branch)].outputs.changed == 'true'
+        with: 
+          branch: ${{ matrix.branch }}

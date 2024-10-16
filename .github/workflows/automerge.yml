@@ -6,11 +6,16 @@ on:
       branch:
         required: true
         type: string
+    outputs:
+      changed:
+        value: ${{ jobs.automerge.outputs.changed }}
 
 jobs:
   automerge:
     name: Automerge ${{ inputs.branch }}
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.rebase.outputs.changed }}
 
     steps:
       - name: Checkout
