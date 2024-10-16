@@ -1,7 +1,10 @@
 #!/bin/bash
 
+set -e
+set -x
+
 if [ -z "$1" ]; then
-    echo "Usage: $0 <branch>"
+    echo "Usage: $0 <branch>" >&2
     exit 1
 fi
 
@@ -10,7 +13,6 @@ fi
 #  other - lygisk repo
 
 MAGISK_CANARY_URL="https://raw.githubusercontent.com/topjohnwu/magisk-files/master/canary.json"
-CI_EXTRA_COMMITS=1
 
 BRANCH="$1"
 
@@ -34,7 +36,7 @@ case "$BRANCH" in
         git checkout origin/master
         ;;
     *)
-        echo "Invalid Branch!"
+        echo "Invalid Branch!" >&2
         exit 1
         ;;
 esac
@@ -42,18 +44,25 @@ esac
 git reset --hard
 
 MAGISK_CHANGES_COUNT=$(git log other/ci-build-$BRANCH..HEAD --pretty=%H | wc -l)
-LYGISK_CI_LATEST_COMMIT=$(git log -1 other/ci-build-$BRANCH~$CI_EXTRA_COMMITS --pretty=format:"%an %ae %ad %s")
-LYGISK_MASTER_LATEST_COMMIT=$(git log -1 other/master --pretty=format:"%an %ae %ad %s")
-echo "MAGISK_CHANGES_COUNT=$MAGISK_CHANGES_COUNT"
-echo "LYGISK_CI_LATEST_COMMIT=$LYGISK_CI_LATEST_COMMIT"
-echo "LYGISK_MASTER_LATEST_COMMIT=$LYGISK_MASTER_LATEST_COMMIT"
-if [ $MAGISK_CHANGES_COUNT -eq 0 ] && [ "$LYGISK_CI_LATEST_COMMIT" = "$LYGISK_MASTER_LATEST_COMMIT" ] ; then
-    echo "CHANGED=false" >> $GITHUB_ENV
-    echo "No changes detected!"
+LYGISK_CURRENT_MASTER_COMMIT=$(git log -1 other/master --pretty=%H)
+git restore --source other/ci-build-$BRANCH -- ci-master-sha.txt
+LYGISK_CI_MASTER_BASE_COMMIT=$(cat ci-master-sha.txt)
+rm ci-master-sha.txt
+echo "MAGISK_CHANGES_COUNT=$MAGISK_CHANGES_COUNT" >&2
+echo "LYGISK_CURRENT_MASTER_COMMIT=$LYGISK_CURRENT_MASTER_COMMIT" >&2
+echo "LYGISK_CI_MASTER_BASE_COMMIT=$LYGISK_CI_MASTER_BASE_COMMIT" >&2
+if [ $MAGISK_CHANGES_COUNT -eq 0 ] && [ "$LYGISK_CURRENT_MASTER_COMMIT" = "$LYGISK_CI_MASTER_BASE_COMMIT" ] ; then
+    echo "changed=false" >> "$GITHUB_OUTPUT"
+    echo "No changes detected!" >&2
     exit 0
 fi
 
-echo "CHANGED=true" >> $GITHUB_ENV
+echo "changed=true" >> "$GITHUB_OUTPUT"
+
+# save the current master commit hash into a file for checking for changes next run
+echo "$LYGISK_CURRENT_MASTER_COMMIT" > ci-master-sha.txt
+git add ci-master-sha.txt
+git commit -m "save master base commit sha"
 
 if [ $BRANCH = "stable" ] ; then
     # no need to pick changes on stable

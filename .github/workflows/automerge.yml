@@ -31,6 +31,7 @@ jobs:
           git fetch other
 
       - name: Rebase changes
+        id: rebase
         run: |
           git checkout other/ci-management mergehelper.sh
           chmod +x mergehelper.sh
@@ -44,7 +45,7 @@ jobs:
           git commit -m "remove workflows"
 
       - name: Push result
-        if: env.CHANGED == 'true'
+        if: steps.rebase.outputs.changed == 'true'
         uses: ad-m/github-push-action@v0.8.0
         with:
           force: true
