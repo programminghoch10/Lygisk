@@ -27,11 +27,11 @@ jobs:
           submodules: 'recursive'
           fetch-depth: 0
 
-      - name: Set up JDK 17
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '21'
 
       - name: Set up Python 3
         uses: actions/setup-python@v5
@@ -61,8 +61,8 @@ jobs:
         with:
           path: |
             ~/.gradle/caches/build-cache-*
-          key: ${{ runner.os }}-build-cache-${{ github.sha }}
-          restore-keys: ${{ runner.os }}-build-cache-
+          key: gradle-build-cache-${{ github.sha }}
+          restore-keys: gradle-build-cache-
 
       - name: Set up NDK
         run: python build.py -v ndk
@@ -103,5 +103,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.branch }}-symbols
-          path: app/build/outputs
+          path: app/apk/build/outputs
           compression-level: 9
