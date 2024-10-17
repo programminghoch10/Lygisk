@@ -9,6 +9,8 @@ on:
     outputs:
       changed:
         value: ${{ jobs.automerge.outputs.changed }}
+      basesha:
+        value: ${{ jobs.automerge.outputs.basesha }}
 
 jobs:
   automerge:
@@ -16,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       changed: ${{ steps.rebase.outputs.changed }}
+      basesha: ${{ steps.rebase.outputs.basesha }}
 
     steps:
       - name: Checkout
@@ -55,6 +58,5 @@ jobs:
         with:
           force: true
           branch: ci-build-${{ inputs.branch }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           push_to_submodules: no

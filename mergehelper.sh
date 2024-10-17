@@ -45,9 +45,9 @@ git reset --hard
 
 MAGISK_CHANGES_COUNT=$(git log other/ci-build-$BRANCH..HEAD --pretty=%H | wc -l)
 LYGISK_CURRENT_MASTER_COMMIT=$(git log -1 other/master --pretty=%H)
-git restore --source other/ci-build-$BRANCH -- ci-master-sha.txt
-LYGISK_CI_MASTER_BASE_COMMIT=$(cat ci-master-sha.txt)
-rm ci-master-sha.txt
+git restore --source other/ci-build-$BRANCH -- ci-master-sha.txt || true
+LYGISK_CI_MASTER_BASE_COMMIT=$(cat ci-master-sha.txt) || true
+rm -f ci-master-sha.txt
 echo "MAGISK_CHANGES_COUNT=$MAGISK_CHANGES_COUNT" >&2
 echo "LYGISK_CURRENT_MASTER_COMMIT=$LYGISK_CURRENT_MASTER_COMMIT" >&2
 echo "LYGISK_CI_MASTER_BASE_COMMIT=$LYGISK_CI_MASTER_BASE_COMMIT" >&2
@@ -58,11 +58,7 @@ if [ $MAGISK_CHANGES_COUNT -eq 0 ] && [ "$LYGISK_CURRENT_MASTER_COMMIT" = "$LYGI
 fi
 
 echo "changed=true" >> "$GITHUB_OUTPUT"
-
-# save the current master commit hash into a file for checking for changes next run
-echo "$LYGISK_CURRENT_MASTER_COMMIT" > ci-master-sha.txt
-git add ci-master-sha.txt
-git commit -m "save master base commit sha"
+echo "basesha=$LYGISK_CURRENT_MASTER_COMMIT" >> "$GITHUB_OUTPUT"
 
 if [ $BRANCH = "stable" ] ; then
     # no need to pick changes on stable

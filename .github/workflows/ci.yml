@@ -80,3 +80,24 @@ jobs:
         if: needs[format('automerge-{0}', matrix.branch)].outputs.changed == 'true'
         with: 
           branch: ${{ matrix.branch }}
+      - uses: actions/checkout@v4
+        if: needs[format('automerge-{0}', matrix.branch)].outputs.changed == 'true'
+        with:
+            ref: ci-build-${{ matrix.branch }}
+            fetch-depth: 0
+      - name: Setup git
+        if: needs[format('automerge-{0}', matrix.branch)].outputs.changed == 'true'
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+      - name: Update CI master sha
+        if: needs[format('automerge-{0}', matrix.branch)].outputs.changed == 'true'
+        run: |
+          echo "${{ needs[format('automerge-{0}', matrix.branch)].outputs.basesha }}" > ci-master-sha.txt
+          git add ci-master-sha.txt
+          git commit -m "save master base commit sha"
+      - name: Push result
+        if: needs[format('automerge-{0}', matrix.branch)].outputs.changed == 'true'
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          force_with_lease: true
