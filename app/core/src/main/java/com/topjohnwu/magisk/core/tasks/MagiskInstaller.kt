@@ -206,7 +206,7 @@ abstract class MagiskInstallImpl protected constructor(
 
         // adapted /scripts/flash_script.sh addon.d
         return arrayOf(
-            "mount -o rw,remount $systemPartition",
+            "su -c mount -o rw,remount $systemPartition",
             "rm -rf $addond/99-magisk.sh 2>/dev/null",
             "rm -rf $addond/magisk 2>/dev/null",
             "mkdir -p $addond/magisk",
