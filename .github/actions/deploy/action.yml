@@ -4,6 +4,9 @@ inputs:
   branch:
     required: true
     type: string
+  GITHUB_TOKEN:
+    required: true
+    type: string
 
 runs:
   using: composite
@@ -15,6 +18,7 @@ runs:
         fetch-depth: 0
 
     - name: Setup git
+      shell: bash
       run: |
         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
         git config --local user.name "github-actions[bot]"
@@ -26,6 +30,7 @@ runs:
         name: ${{ matrix.branch }}
 
     - name: Copy artifacts
+      shell: bash
       run: |
         mv -f artifacts/app-release.apk ${{ matrix.branch }}/app-release.apk
         mv -f artifacts/app-debug.apk ${{ matrix.branch }}/app-debug.apk
@@ -33,6 +38,7 @@ runs:
         rm -r artifacts
 
     - name: Run helper script
+      shell: bash
       run: |
         git checkout origin/ci-management releasehelper.sh
         chmod +x releasehelper.sh
@@ -42,6 +48,7 @@ runs:
         rm releasehelper.sh
 
     - name: Commit update
+      shell: bash
       run: |
         git restore --staged .
         git add ${{ matrix.branch }}/app-release.apk
@@ -56,5 +63,5 @@ runs:
       with:
         branch: deploy
         force_with_lease: true
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ inputs.GITHUB_TOKEN }}
         repository: ${{ github.repository }}

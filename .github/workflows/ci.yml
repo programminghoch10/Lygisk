@@ -80,6 +80,7 @@ jobs:
         if: needs[format('automerge-{0}', matrix.branch)].outputs.changed == 'true'
         with: 
           branch: ${{ matrix.branch }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
         if: needs[format('automerge-{0}', matrix.branch)].outputs.changed == 'true'
         with:

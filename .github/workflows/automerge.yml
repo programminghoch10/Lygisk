@@ -58,5 +58,5 @@ jobs:
         with:
           force: true
           branch: ci-build-${{ inputs.branch }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
-          push_to_submodules: no
