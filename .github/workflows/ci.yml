@@ -102,3 +102,5 @@ jobs:
         uses: ad-m/github-push-action@v0.8.0
         with:
           force_with_lease: true
+      - uses: actions/checkout@v4
+        # need to checkout default branch again, for the post-run hooks of the composite deploy action to work
