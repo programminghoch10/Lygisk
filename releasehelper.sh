@@ -24,11 +24,11 @@ esac
 
 GITBRANCH="ci-build-$BRANCH"
 
-git checkout origin/"$GITBRANCH" gradle.properties
+git checkout origin/"$GITBRANCH" app/gradle.properties
 
 VERSION=$(git log -1 --pretty=%h origin/"$GITBRANCH")
-VERSION_CODE=$(cat gradle.properties | grep 'magisk.versionCode' | cut -f2 -d '=')
-STUB_VERSION_CODE=$(cat gradle.properties | grep 'magisk.stubVersion' | cut -f2 -d '=')
+VERSION_CODE=$(grep 'magisk.versionCode' app/gradle.properties | cut -f2 -d '=')
+STUB_VERSION_CODE=$(grep 'magisk.stubVersion' app/gradle.properties | cut -f2 -d '=')
 RELEASETYPE="debug"
 
 case "$BRANCH" in
@@ -59,4 +59,4 @@ echo "Lygisk $BRANCH Update $VERSION ($VERSION_CODE)
 
 Build date: $(date -u -R)" > note.md
 
-rm gradle.properties
+rm app/gradle.properties
