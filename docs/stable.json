@@ -1,0 +1,8 @@
+{
+  "magisk": {
+    "version": "30.6",
+    "versionCode": "30600",
+    "link": "https://github.com/programminghoch10/Lygisk/releases/download/v30.6/Lygisk-v30.6.apk",
+    "note": "https://github.com/programminghoch10/Lygisk/releases/download/v30.6/notes.md"
+  }
+}
