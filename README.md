@@ -18,36 +18,9 @@ and [@binarynoise](https://github.com/binarynoise).
 Thanks to [@jesec](https://github.com/jesec) for the initial work.
 Read more about this [here](https://github.com/topjohnwu/Magisk/pull/3037).
 
-## Downloads
+## Download
 
-Get the latest stable here: [Direct Download from GitHub](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/stable/app-release.apk)
-
-Any other variant can be downloaded by clicking its name below.
-
-## Variants
-
-We supply you with four variants of Lygisk:
-
-* [**`Stable`**](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/stable/app-release.apk): Stable and tested versions, which have been manually ported from Magisk stable and have been tested to work
-* [**`Beta`**](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/beta/app-release.apk): Automated ci-builds from the latest magisk stable
-* [**`Canary`**](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/canary/app-debug.apk): Automated ci-builds from the latest magisk canary
-* [**`Madness`**](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/madness/app-debug.apk): Automated ci-builds from the latest magisk master
-
-We recommend `stable` or `beta` for normal usage.
-
-If you want any of the latest Magisk features you can try `canary` but we can't guarantee anything there.
-If you're a real madlad you can also use `madness` but only truly insane people would want to do that.
-
-For `canary` or `madness` you need to add a custom update URL.
-
-variant | custom update URL
--|-
-stable | `https://programminghoch10.github.io/Lygisk/stable.json`
-beta | `https://programminghoch10.github.io/Lygisk/beta.json`
-canary | `https://programminghoch10.github.io/Lygisk/canary.json`
-madness | `https://programminghoch10.github.io/Lygisk/madness.json`
-
-*(`stable` and `beta` are just listed for completeness)*
+Get the latest stable from [GitHub Releases](https://github.com/programminghoch10/Lygisk/releases/latest).
 
 ## Installation
 
@@ -61,11 +34,12 @@ use [Magisk](https://github.com/topjohnwu/Magisk) instead.
 
 Migrating from Magisk to Lygisk is easy and does not remove installed modules.
 
-Just uninstall the Magisk app and [install Lygisk via recovery](#installation). Full uninstall should not be necessary.
+Just uninstall the Magisk app and [install Lygisk via recovery](#installation). 
+Full uninstall should not be necessary.
 
 It's the same way for switching back to Magisk.
 
-## Lygisk vs Magisk
+## Lygisk vs. Magisk
 
 Lygisk has been developed for one specific case:
 
@@ -86,13 +60,13 @@ which (in our case) is encrypted and thus unavailable.
 Lygisk will keep all required files for reinstallation ready within `addon.d`.
 If you use Lygisk with unencrypted `/data`, it won't give you any advantage over Magisk.
 
-## Bug reports
+## Bug Reports
 
 Please only report bugs to us if you are sure that they appear because of our work.
 If you are unsure, just try out [Magisk](https://github.com/topjohnwu/Magisk) and if the same issue appears there, report it there.
 
-Only report bugs on `stable` builds.
-If you need to report a bug, install the [`debug` variant](https://raw.githubusercontent.com/programminghoch10/Lygisk/deploy/stable/app-debug.apk) first. 
+Only report bugs on the latest release.
+If you need to report a bug, install the `debug` variant first.
 In your bug report include a `logcat`, `dmesg`, the Lygisk logs found inside the app and `/tmp/recovery.log` for `addon.d` and install issues.
 
 ## Useful Links
