@@ -33,6 +33,7 @@ initialize() {
   fi
   OUTFD=
   setup_flashable
+  get_flags
 }
 
 main() {
@@ -59,7 +60,6 @@ main() {
   print_title "Lygisk $PRETTY_VER addon.d"
 
   mount_partitions
-  get_flags
 
   if $backuptool_ab; then
     # Swap the slot for addon.d-v2
@@ -105,11 +105,13 @@ case "$1" in
     # Back up PREINITDEVICE from existing partition before OTA on A-only devices
     if ! $backuptool_ab; then
       initialize
-      RECOVERYMODE=false
       find_boot_image
       $MAGISKBIN/magiskboot unpack "$BOOTIMAGE"
       $MAGISKBIN/magiskboot cpio ramdisk.cpio "extract .backup/.magisk config.orig"
       $MAGISKBIN/magiskboot cleanup
+      if [ ! -f config.orig ]; then
+        ui_print "! Unable to back up config.orig"
+      fi
     fi
   ;;
   pre-restore)
