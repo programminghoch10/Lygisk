@@ -28,6 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -40,6 +41,7 @@ fun SettingsArrow(
     modifier: Modifier = Modifier,
     summary: String? = null,
     leadingContent: @Composable (() -> Unit)? = null,
+    enabled: Boolean = true,
     onClick: () -> Unit
 ) {
     ListItem(
@@ -48,7 +50,9 @@ fun SettingsArrow(
         leadingContent = leadingContent,
         trailingContent = { Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = null) },
         colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-        modifier = modifier.clickable(onClick = onClick)
+        modifier = modifier
+            .alpha(if (enabled) 1f else 0.5f)
+            .clickable(enabled = enabled, onClick = onClick)
     )
 }
 

@@ -201,6 +201,8 @@ fun InstallDialog(
                     ) {
                         SettingsArrow(
                             title = stringResource(CoreR.string.patch_image),
+                            summary = "Not supported by Lygisk",
+                            enabled = false,
                             onClick = {
                                 onDismiss()
                                 installVm.selectMethod(InstallViewModel.Method.PATCH)
@@ -221,6 +223,8 @@ fun InstallDialog(
                         if (!installVm.noSecondSlot) {
                             SettingsArrow(
                                 title = stringResource(CoreR.string.install_inactive_slot),
+                                summary = "Not supported by Lygisk",
+                                enabled = false,
                                 onClick = {
                                     onDismiss()
                                     installVm.selectMethod(InstallViewModel.Method.INACTIVE_SLOT)
