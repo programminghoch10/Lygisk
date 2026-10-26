@@ -861,7 +861,7 @@ private fun EnvFixComposableDialog(
     onFixEnv: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val needsFullFix = code == 2 ||
+    val needsFullFix = true ||
         Info.env.versionCode != BuildConfig.APP_VERSION_CODE ||
         Info.env.versionString != BuildConfig.APP_VERSION_NAME
 
