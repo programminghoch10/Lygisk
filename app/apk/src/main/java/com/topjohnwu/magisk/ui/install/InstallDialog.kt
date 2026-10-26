@@ -273,7 +273,8 @@ private fun InstallOptionsSection(
             var recovery by remember { mutableStateOf(Config.recovery) }
             SettingsSwitch(
                 title = stringResource(CoreR.string.recovery_mode),
-                checked = recovery,
+                checked = false,
+                enabled = false,
                 onCheckedChange = {
                     recovery = it
                     Config.recovery = it
