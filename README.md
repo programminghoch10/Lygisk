@@ -24,8 +24,8 @@ Get the latest stable from [GitHub Releases](https://github.com/programminghoch1
 
 ## Installation
 
-For installing Lygisk, just rename the downloaded file to `.zip` and sideload it.
-If the Lygisk app doesn't appear after installation, install the apk manually.
+For installing Lygisk, just adb sideload the downloaded apk via recovery.
+After starting the device, install the apk for the Lygisk app (it does not get installed or updated automatically).
 
 For installing by patching bootimages,
 use [Magisk](https://github.com/topjohnwu/Magisk) instead.
